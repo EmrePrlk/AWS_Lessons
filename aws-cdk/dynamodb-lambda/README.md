@@ -1,9 +1,9 @@
 
-# Welcome to your CDK Python project!
+# An Earthquake Data Collection CDK Python project!
 
-This is a blank project for CDK development with Python.
+This project is a serverless application written in Python using AWS CDK. 
+The purpose of the project is to fetch the location, time, and magnitude data of the latest earthquakes from the official website of the Disaster and Emergency Management Presidency (AFAD) through their REST API, and store them in a DynamoDB using a Lambda function. The application will be further developed over time.
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
 
 This project is set up like a standard Python project.  The initialization
 process also creates a virtualenv within this project, stored under the `.venv`
