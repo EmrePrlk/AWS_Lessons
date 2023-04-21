@@ -1,5 +1,6 @@
 {
   "app": "npx ts-node --prefer-ts-exts bin/myapp.ts",
+  "assetIncludePaths": ["lambda"],
   "watch": {
     "include": [
       "**"
@@ -48,3 +49,5 @@
     "@aws-cdk/aws-redshift:columnId": true
   }
 }
+
+
