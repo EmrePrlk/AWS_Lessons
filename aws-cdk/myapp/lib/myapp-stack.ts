@@ -1,54 +1,58 @@
-import { Stack, StackProps, Construct } from '@aws-cdk/core';
-import { Table, AttributeType } from '@aws-cdk/aws-dynamodb';
-import { Function, Code, Runtime } from '@aws-cdk/aws-lambda';
-import { LambdaIntegration, RestApi } from '@aws-cdk/aws-apigateway';
+import * as cdk from 'aws-cdk-lib';
+import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
+import * as lambda from 'aws-cdk-lib/aws-lambda';
+import * as apigateway from 'aws-cdk-lib/aws-apigateway';
+import { Duration } from 'aws-cdk-lib';
 
-export class MyappStack extends Stack {
-  constructor(scope: Construct, id: string, props?: StackProps) {
+export class MyStack extends cdk.Stack {
+  constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    // DynamoDB table
-    const table = new Table(this, 'MyTable', {
-      partitionKey: { name: 'assetId', type: AttributeType.STRING }
+    // create dynamodb table
+    const table = new dynamodb.Table(this, 'my-table', {
+      partitionKey: { name: 'id', type: dynamodb.AttributeType.STRING },
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
 
-    // Lambda function to handle GET request
-    const getAssetLambda = new Function(this, 'GetAssetFunction', {
-      runtime: Runtime.NODEJS_14_X,
-      handler: 'src/get-asset.handler',
-      code: Code.fromAsset('lambda/get-asset'),
+    // create lambda functions
+    const getFunction = new lambda.Function(this, 'get-function', {
+      runtime: lambda.Runtime.NODEJS_14_X,
+      handler: 'index.handler',
+      code: lambda.Code.fromAsset('lambda/get'),
+      timeout: Duration.seconds(30),
       environment: {
-        TABLE_NAME: table.tableName
-      }
+        TABLE_NAME: table.tableName,
+      },
     });
 
-    // Lambda function to handle PUT request
-    const putAssetLambda = new Function(this, 'PutAssetFunction', {
-      runtime: Runtime.NODEJS_14_X,
-      handler: 'src/get-asset.handler',
-      code: Code.fromAsset('lambda/put-asset'),
+    const putFunction = new lambda.Function(this, 'put-function', {
+      runtime: lambda.Runtime.NODEJS_14_X,
+      handler: 'index.handler',
+      code: lambda.Code.fromAsset('lambda/put'),
+      timeout: Duration.seconds(30),
       environment: {
-        TABLE_NAME: table.tableName
-      }
+        TABLE_NAME: table.tableName,
+      },
     });
 
-    // Lambda function to handle DELETE request
-    const deleteAssetLambda = new Function(this, 'DeleteAssetFunction', {
-      runtime: Runtime.NODEJS_14_X,
-      handler: 'src/get-asset.handler',
-      code: Code.fromAsset('lambda/delete-asset'),
+    const deleteFunction = new lambda.Function(this, 'delete-function', {
+      runtime: lambda.Runtime.NODEJS_14_X,
+      handler: 'index.handler',
+      code: lambda.Code.fromAsset('lambda/delete'),
+      timeout: Duration.seconds(30),
       environment: {
-        TABLE_NAME: table.tableName
-      }
+        TABLE_NAME: table.tableName,
+      },
     });
 
-    // API Gateway
-    const api = new RestApi(this, 'MyApi');
+    // create api gateway
+    const api = new apigateway.RestApi(this, 'my-api', {
+      restApiName: 'My API',
+    });
 
-    // API Gateway resources and methods
-    const assets = api.root.addResource('assets');
-    assets.addMethod('GET', new LambdaIntegration(getAssetLambda));
-    assets.addMethod('PUT', new LambdaIntegration(putAssetLambda));
-    assets.addMethod('DELETE', new LambdaIntegration(deleteAssetLambda));
+    const items = api.root.addResource('items');
+    items.addMethod('GET', new apigateway.LambdaIntegration(getFunction));
+    items.addMethod('PUT', new apigateway.LambdaIntegration(putFunction));
+    items.addMethod('DELETE', new apigateway.LambdaIntegration(deleteFunction));
   }
 }
