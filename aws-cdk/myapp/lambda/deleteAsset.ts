@@ -1,14 +1,14 @@
 import { APIGatewayProxyHandler } from 'aws-lambda';
-import AWS from 'aws-sdk';
+import * as AWS from 'aws-sdk';
 
 const dynamoDB = new AWS.DynamoDB.DocumentClient();
 
 export const handler: APIGatewayProxyHandler = async (event, context) => {
   try {
-    const assetId = event.pathParameters.assetId;
+    const assetId = event.pathParameters?.assetId;
 
     const result = await dynamoDB.delete({
-      TableName: process.env.DYNAMODB_TABLE_NAME,
+      TableName: process.env.DYNAMODB_TABLE_NAME ?? '',
       Key: { assetId }
     }).promise();
 

@@ -1,17 +1,23 @@
-import * as cdk from 'aws-cdk-lib';
+import { Stack, StackProps } from 'aws-cdk-lib';
 import * as apigateway from 'aws-cdk-lib/aws-apigateway';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
+import { Construct } from "constructs";
+import { get } from 'env-var'
 
-export class ApiStack extends cdk.Stack {
-  constructor(scope: cdk.Construct, id: string, props: cdk.StackProps) {
+
+
+export class ApiStack extends Stack {
+  constructor(scope: Construct, id: string, props: StackProps) {
     super(scope, id, props);
+
+    const TABLE_NAME = get('TABLE_NAME').required().asString()
 
     const assetFunction = new lambda.Function(this, 'AssetFunction', {
       runtime: lambda.Runtime.NODEJS_14_X,
       handler: 'asset.handler',
       code: lambda.Code.fromAsset('functions/asset'),
       environment: {
-        TABLE_NAME: props.env?.TABLE_NAME as string,
+        TABLE_NAME: TABLE_NAME,
       },
     });
 
