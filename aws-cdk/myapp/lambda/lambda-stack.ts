@@ -1,53 +1,43 @@
 import * as cdk from 'aws-cdk-lib';
-import { Stack, StackProps } from 'aws-cdk-lib';
-import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
-import * as path from 'path';
-import { Construct } from 'constructs';
+import * as lambda from 'aws-cdk-lib/aws-lambda';
+import * as iam from 'aws-cdk-lib/aws-iam';
+import { Duration } from 'aws-cdk-lib';
 
-
-export class LambdaStack extends Stack {
-  constructor(scope: Construct, id: string, props?: StackProps) {
+export class AssetLambdaFunctionStack extends cdk.Stack {
+  constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
+    // Define DynamoDB table
     const assetTable = new dynamodb.Table(this, 'AssetTable', {
-      partitionKey: { name: 'assetId', type: dynamodb.AttributeType.STRING },
+      partitionKey: {
+        name: 'assetId',
+        type: dynamodb.AttributeType.STRING,
+      },
+      billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
       tableName: 'Asset',
     });
 
-    const lambdaCode = lambda.Code.fromAsset(path.join(__dirname, '../lambda'));
-    const functionName1 = 'writeAsset';
-    const lambda1 = new lambda.Function(this, functionName1, {
+    // Define Lambda function
+    const assetLambda = new lambda.Function(this, 'AssetLambda', {
       runtime: lambda.Runtime.NODEJS_14_X,
-      handler: 'writeAsset.handler',
-      code: lambdaCode,
+      code: lambda.Code.fromAsset('lambda'),
+      handler: 'asset.handler',
+      timeout: Duration.seconds(10),
       environment: {
-        TABLE_NAME: assetTable.tableName,
+        ASSET_TABLE_NAME: assetTable.tableName,
       },
     });
 
-    const functionName2 = 'readAsset';
-    const lambda2 = new lambda.Function(this, functionName2, {
-      runtime: lambda.Runtime.NODEJS_14_X,
-      handler: 'readAsset.handler',
-      code: lambdaCode,
-      environment: {
-        TABLE_NAME: assetTable.tableName,
-      },
-    });
+    // Grant permission to the Lambda function to access DynamoDB
+    assetTable.grantReadWriteData(assetLambda);
 
-    const functionName3 = 'deleteAsset';
-    const lambda3 = new lambda.Function(this, functionName3, {
-      runtime: lambda.Runtime.NODEJS_14_X,
-      handler: 'deleteAsset.handler',
-      code: lambdaCode,
-      environment: {
-        TABLE_NAME: assetTable.tableName,
-      },
-    });
-
-    assetTable.grantReadWriteData(lambda1);
-    assetTable.grantReadData(lambda2);
-    assetTable.grantReadWriteData(lambda3);
+    // Add IAM policy statement to allow the Lambda function to write CloudWatch logs
+    assetLambda.addToRolePolicy(
+      new iam.PolicyStatement({
+        actions: ['logs:CreateLogGroup', 'logs:CreateLogStream', 'logs:PutLogEvents'],
+        resources: ['arn:aws:logs:*:*:*'],
+      })
+    );
   }
 }
