@@ -32,33 +32,33 @@ export class ApiStack extends cdk.Stack {
     // Lambda functions
     const createAssetLambda = new lambda.Function(this, 'CreateAssetLambda', {
       runtime: lambda.Runtime.NODEJS_14_X,
-      code: lambda.Code.fromAsset('../src/controller/asset-handler.ts'),
-      handler: 'asset.handler',
+      code: lambda.Code.fromAsset('./src/controller'),
+      handler: 'asset-handler.handler',
       role: tableAccessRole,
       environment: {
         TABLE_NAME: table.tableName,
       },
     });
 
-    const readAssetLambda = new lambda.Function(this, 'ReadAssetLambda', {
-      runtime: lambda.Runtime.NODEJS_14_X,
-      code: lambda.Code.fromAsset('../src/controller/asset-handler.ts'),
-      handler: 'index.handler',
-      role: tableAccessRole,
-      environment: {
-        TABLE_NAME: table.tableName,
-      },
-    });
+    // const readAssetLambda = new lambda.Function(this, 'ReadAssetLambda', {
+    //   runtime: lambda.Runtime.NODEJS_14_X,
+    //   code: lambda.Code.fromAsset('../src/controller/asset-handler.ts'),
+    //   handler: 'index.handler',
+    //   role: tableAccessRole,
+    //   environment: {
+    //     TABLE_NAME: table.tableName,
+    //   },
+    // });
 
-    const deleteAssetLambda = new lambda.Function(this, 'DeleteAssetLambda', {
-      runtime: lambda.Runtime.NODEJS_14_X,
-      code: lambda.Code.fromAsset('../src/controller/asset-handler.ts'),
-      handler: 'index.handler',
-      role: tableAccessRole,
-      environment: {
-        TABLE_NAME: table.tableName,
-      },
-    });
+    // const deleteAssetLambda = new lambda.Function(this, 'DeleteAssetLambda', {
+    //   runtime: lambda.Runtime.NODEJS_14_X,
+    //   code: lambda.Code.fromAsset('../src/controller/asset-handler.ts'),
+    //   handler: 'index.handler',
+    //   role: tableAccessRole,
+    //   environment: {
+    //     TABLE_NAME: table.tableName,
+    //   },
+    // });
 
     // API Gateway
     const restApi = new apigateway.RestApi(this, 'AssetApi', {
@@ -69,13 +69,13 @@ export class ApiStack extends cdk.Stack {
     const createAssetResource = restApi.root.addResource('assets');
     createAssetResource.addMethod('POST', createAssetIntegration);
 
-    const readAssetIntegration = new apigateway.LambdaIntegration(readAssetLambda);
-    const readAssetResource = restApi.root.addResource('assets');
-    readAssetResource.addMethod('GET', readAssetIntegration);
+    // const readAssetIntegration = new apigateway.LambdaIntegration(readAssetLambda);
+    // const readAssetResource = restApi.root.addResource('assets');
+    // readAssetResource.addMethod('GET', readAssetIntegration);
 
-    const deleteAssetIntegration = new apigateway.LambdaIntegration(deleteAssetLambda);
-    const deleteAssetResource = restApi.root.addResource('assets');
-    deleteAssetResource.addMethod('DELETE', deleteAssetIntegration);
+    // const deleteAssetIntegration = new apigateway.LambdaIntegration(deleteAssetLambda);
+    // const deleteAssetResource = restApi.root.addResource('assets');
+    // deleteAssetResource.addMethod('DELETE', deleteAssetIntegration);
 
     // Output the API URL
     new cdk.CfnOutput(this, 'ApiUrl', {
