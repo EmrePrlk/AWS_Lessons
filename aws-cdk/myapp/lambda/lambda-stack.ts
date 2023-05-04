@@ -21,7 +21,7 @@ export class AssetLambdaFunctionStack extends cdk.Stack {
     // Define Lambda function
     const assetLambda = new lambda.Function(this, 'AssetLambda', {
       runtime: lambda.Runtime.NODEJS_14_X,
-      code: lambda.Code.fromAsset('lambda'),
+      code: lambda.Code.fromAsset('../src/controller/asset-handler.ts'),
       handler: 'asset.handler',
       timeout: Duration.seconds(10),
       environment: {

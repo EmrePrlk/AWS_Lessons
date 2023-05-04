@@ -32,8 +32,8 @@ export class ApiStack extends cdk.Stack {
     // Lambda functions
     const createAssetLambda = new lambda.Function(this, 'CreateAssetLambda', {
       runtime: lambda.Runtime.NODEJS_14_X,
-      code: lambda.Code.fromAsset('lambda/createAsset'),
-      handler: 'index.handler',
+      code: lambda.Code.fromAsset('../src/controller/asset-handler.ts'),
+      handler: 'asset.handler',
       role: tableAccessRole,
       environment: {
         TABLE_NAME: table.tableName,
@@ -42,7 +42,7 @@ export class ApiStack extends cdk.Stack {
 
     const readAssetLambda = new lambda.Function(this, 'ReadAssetLambda', {
       runtime: lambda.Runtime.NODEJS_14_X,
-      code: lambda.Code.fromAsset('lambda/readAsset'),
+      code: lambda.Code.fromAsset('../src/controller/asset-handler.ts'),
       handler: 'index.handler',
       role: tableAccessRole,
       environment: {
@@ -52,7 +52,7 @@ export class ApiStack extends cdk.Stack {
 
     const deleteAssetLambda = new lambda.Function(this, 'DeleteAssetLambda', {
       runtime: lambda.Runtime.NODEJS_14_X,
-      code: lambda.Code.fromAsset('lambda/deleteAsset'),
+      code: lambda.Code.fromAsset('../src/controller/asset-handler.ts'),
       handler: 'index.handler',
       role: tableAccessRole,
       environment: {
