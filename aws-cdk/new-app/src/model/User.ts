@@ -4,14 +4,14 @@ interface UserProps {
     assetId: string
     name: string
     serialNo: string
-    assignDate: date
+    assignDate: Date
 }
 
 export class User implements Base, UserProps{
     assetId: string
     name: string
     serialNo: string
-    assignDate: date   | undefined
+    assignDate: Date  
 
     constructor(props: UserProps){
         this.assetId = props.assetId

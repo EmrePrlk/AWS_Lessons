@@ -5,7 +5,7 @@ import httpUrlEncodePathParser from '@middy/http-urlencode-path-parser';
 import inputOutputLogger from '@middy/input-output-logger';
 import { Context, Handler } from 'aws-lambda';
 import pino from 'pino';
-import { userService } from '../config/createUserServiceConfig';
+import { userService } from '../config/addAssetServiceConfig';
 
 const logger = pino()
 

@@ -7,8 +7,8 @@ import validator from "@middy/validator";
 import { transpileSchema } from '@middy/validator/transpile';
 import { Handler } from 'aws-lambda';
 import pino from 'pino';
-import { userService } from '../config/createUserServiceConfig';
-import { UserCreateDTO } from '../dto/UserCreateDTO';
+import { userService } from '../config/addAssetServiceConfig';
+import { AddAssetDTO } from "../dto/AddAssetDTO";
 
 const logger = pino();
 
@@ -42,7 +42,7 @@ interface AddAssetHandler {
     body: AddAssetDTO
 }
 
-Export const lambdaHandler:Handler<AddAssetHandler> = async (event, _) => {
+export const lambdaHandler:Handler<AddAssetHandler> = async (event, _) => {
     const { body } = event
 
     await userService.addAsset(body)
