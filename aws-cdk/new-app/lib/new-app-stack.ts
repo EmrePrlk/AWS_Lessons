@@ -55,5 +55,16 @@ export class NewAppStack extends Stack {
     });
     userTable.grantReadWriteData(removeAssetFunction)
 
+    const api = new aws_apigateway.RestApi(this, 'User-RestAPI', {
+      restApiName: 'User-RestAPI',
+      description: 'User Rest API',
+    });
+
+    const addAssetResource = api.root.addResource('add-asset');
+    addAssetResource.addMethod('POST', getDefaultLambdaIntegration(addAssetFunction));
+
+    const getAllAssetResource = api.root.addResource('get-asset');
+    getAllAssetResource.addMethod('GET', getDefaultLambdaIntegration(getAllAssetFunction));
+
   }
 }
