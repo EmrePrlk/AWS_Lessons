@@ -35,7 +35,7 @@ export class NewAppStack extends Stack {
     // get all asset Lambda Function
 
     const getAllAssetFunction = new NodeJSLambdaFunction(this, 'GetAllAssetFunction', {
-      entry: path.resolve(__dirname, '../src/controller/get-all-asset.ts'),
+      entry: path.resolve(__dirname, '../src/controller/get-asset.ts'),
       handler: "handler",
       functionName: "GetAllAsset",
       environment: {
