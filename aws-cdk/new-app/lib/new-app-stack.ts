@@ -64,7 +64,7 @@ export class NewAppStack extends Stack {
     addAssetResource.addMethod('POST', getDefaultLambdaIntegration(addAssetFunction));
 
     const getAllAssetResource = api.root.addResource('get-asset');
-    getAllAssetResource.addMethod('GET', getDefaultLambdaIntegration(getAllAssetFunction));
+    getAllAssetResource.addResource('{assetId}').addMethod('GET', getDefaultLambdaIntegration(getAllAssetFunction));
 
   }
 }

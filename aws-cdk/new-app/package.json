@@ -28,7 +28,7 @@
     "@middy/http-urlencode-path-parser": "^4.4.0",
     "@middy/input-output-logger": "^4.4.0",
     "@middy/validator": "^4.4.0",
-    "aws-cdk-lib": "2.69.0",
+    "aws-cdk-lib": "^2.78.0",
     "aws-sdk": "^2.1372.0",
     "constructs": "^10.0.0",
     "env-var": "^7.3.1",
