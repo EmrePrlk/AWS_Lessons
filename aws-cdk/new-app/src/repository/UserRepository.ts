@@ -16,14 +16,16 @@ export class UserRepository {
         }
     }
 
-    public async getAsset(assetId: string, user: GetAssetDTO): Promise<void>{
+    public async getAsset(assetId: string): Promise<User>{
         const params = {
             TableName : this.tableName,
             Key: {
                 "id": assetId
             },
-            ...createUpdateParams(user)
+            ...createUpdateParams(User)
         };
-        await this.docClient.update(params).promise()
+        const result = await this.docClient.get(params).promise();
+
+        return result.Item as User;
     }
 }

@@ -23,7 +23,7 @@ export class NewAppStack extends Stack {
     // add new asset Lambda Function
 
     const addAssetFunction = new NodeJSLambdaFunction(this, 'AddAssetFunction', {
-      entry: path.resolve(__dirname, '../scr/controller/add-asset.ts'),
+      entry: path.resolve(__dirname, '../src/controller/add-asset.ts'),
       handler: "handler",
       functionName: "AddAsset",
       environment: {
@@ -35,7 +35,7 @@ export class NewAppStack extends Stack {
     // get all asset Lambda Function
 
     const getAllAssetFunction = new NodeJSLambdaFunction(this, 'GetAllAssetFunction', {
-      entry: path.resolve(__dirname, '../scr/controller/get-all-asset.ts'),
+      entry: path.resolve(__dirname, '../src/controller/get-all-asset.ts'),
       handler: "handler",
       functionName: "GetAllAsset",
       environment: {
@@ -46,7 +46,7 @@ export class NewAppStack extends Stack {
 
     // remove asset Lambda Function
     const removeAssetFunction = new NodeJSLambdaFunction(this, 'RemoveAssetFunction', {
-      entry: path.resolve(__dirname, '../scr/controller/remove-asset.ts'),
+      entry: path.resolve(__dirname, '../src/controller/remove-asset.ts'),
       handler: "handler",
       functionName: "RemoveAsset",
       environment: {

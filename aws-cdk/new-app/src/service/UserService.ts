@@ -6,14 +6,15 @@ import { UserRepository } from "../repository/UserRepository";
 export class UserService {
     constructor(private userRepository: UserRepository) {}
 
-    public async addAsset(addAssetDTO: AddAssetDTO): Promise<void> {
-        const isAssetExist = Boolean(await this.userRepository.isAssetExist(addAssetDTO.assetId) ?? await this.userRepository.getAssetById(addAssetDTO.assetId))
-        if(isUserExist){
-            throw new Error('Asset already exist')
-        
-        }
+    public async addAsset(addAssetDTO: AddAssetDTO): Promise<User> {
+        const newAsset = new User(addAssetDTO);
+        await this.userRepository.addAsset(newAsset);
+        return newAsset;
+    }
 
-        const user = User(addAssetDTO)
-        await this.userRepository.addAsset(user)
+    public async getAsset(id: string): Promise<User>{
+        const user = this.userRepository.getAsset(id)
+        if(!user) throw new Error('User not found');
+        return user
     }
 }

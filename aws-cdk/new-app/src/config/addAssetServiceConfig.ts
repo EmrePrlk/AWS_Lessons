@@ -9,6 +9,6 @@ const docClient = new DynamoDB.DocumentClient({
     region: 'us-east-1' 
 });
 
-const UserRepository = new UserRepository(USER_TABLE_NAME, docClient);
+const userRepository = new UserRepository(USER_TABLE_NAME, docClient);
 
-export const userService = new UserService(UserRepository)
+export const userService = new UserService(userRepository)
